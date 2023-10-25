@@ -39,15 +39,25 @@ def generate():
 
 #--------------------------------------------------------Save Password ----------------------------------------------------------#
 
+def special_character(s):
+    for c in s:
+        if not (c.isalpha() or c.isdigit() or c == '_' or c == '.' or c == '@' or c == '-'):
+            return True
+    return False
+
+
 def save():
 
     website = website_entry.get()
     email = email_entry.get()
     password = password_entry.get()
 
-    if len(website) == 0 or len(password) == 0:
+    if len(website) == 0 or len(password) == 0 or len(email) == 0:
         messagebox.showerror(title="Invalid Input", message="Don't leave any field empty!")
-
+    
+    elif special_character(email):
+        messagebox.showerror(title="Invalid username!", message="No special characters are allowed in username.")
+    
     else:
         is_ok = messagebox.askokcancel(title = website, message=f"You have entered: \nEmail: {email}\nPassword: {password}\n"
                                                             f"Are you sure to save?")
