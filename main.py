@@ -115,14 +115,30 @@ email_entry.grid(column = 1, row = 2, columnspan = 2)
 password_entry = Entry(width = 50)
 password_entry.grid(column = 1, row = 3, columnspan = 2)
 
+#Password variables
+
+frame2 = Frame(screen, width=300, height=20)
+frame2.grid(column=1, row=4, columnspan=2)
+
+upper = IntVar()
+upper_box = Checkbutton(frame2, text = "Uppercase", variable = upper)
+upper_box.grid(column = 2, row = 4)
+
+nums = IntVar()
+nums_box = Checkbutton(frame2, text = "Numbers", variable = nums)
+nums_box.grid(column = 3, row = 4)
+
+syms= IntVar()
+syms_box = Checkbutton(frame2, text = "Symbols", variable = syms)
+syms_box.grid(column = 4, row = 4)
 
 #Buttons
 
 generate_button = Button(text="Generate Password", command = generate)
-generate_button.grid(column = 1, row = 4)
+generate_button.grid(column = 1, row = 5, columnspan = 2)
 
 add_button = Button(text = "Add", width = 20, command = save)
-add_button.grid(column = 1, row = 5, columnspan = 2) 
+add_button.grid(column = 1, row = 6, columnspan = 2) 
 
 
 
