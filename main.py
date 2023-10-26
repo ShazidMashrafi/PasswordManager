@@ -3,21 +3,34 @@ from tkinter import messagebox
 import random
 import string
 
+#Screen
 
+screen = Tk()
+screen.config(padx = 50 , pady = 50)
+
+
+#Global Variables
+uppers = IntVar()
+nums = IntVar()
+syms = IntVar()
 
 #----------------------------------------------------Password Generator ----------------------------------------------------------#
 
 def generate():
+
+    password_entry.delete(0,END)
 
     uppercase = list(string.ascii_uppercase)
     lowercase = list(string.ascii_lowercase)
     numbers = list(string.digits)
     symbols = ['@', '#', '$', '%', '&', '_', '!', '.', '?', '*']
 
-    n_uppercase = random.randint(4, 5)
-    n_lowercase = random.randint(4, 5)
-    n_symbols = random.randint(2,4)
-    n_numbers = random.randint(2,4)
+    n=8
+
+    n_uppercase = int(n*.15) if uppers.get() else 0
+    n_numbers = int(n*.30) if nums.get() else 0
+    n_symbols = int(n*.15) if syms.get() else 0
+    n_lowercase = n - (n_uppercase + n_numbers + n_symbols)
 
     password_list = [random.choice(lowercase) for _ in range(n_lowercase)]
     password_list += [random.choice(uppercase) for _ in range(n_uppercase)]
@@ -73,8 +86,6 @@ def save():
 
 #--------------------------------------------------- UI Setup ------------------------------------------------------------------#
 
-screen = Tk()
-screen.config(padx = 50 , pady = 50)
 logo = PhotoImage(file = "Assets//logo.png")
 screen.iconphoto(False, logo)
 screen.title("Password Manager")
@@ -120,17 +131,14 @@ password_entry.grid(column = 1, row = 3, columnspan = 2)
 frame2 = Frame(screen, width=300, height=20)
 frame2.grid(column=1, row=4, columnspan=2)
 
-upper = IntVar()
-upper_box = Checkbutton(frame2, text = "Uppercase", variable = upper)
+upper_box = Checkbutton(frame2, text = "Uppercase", variable = uppers)
 upper_box.grid(column = 2, row = 4)
 
-nums = IntVar()
-nums_box = Checkbutton(frame2, text = "Numbers", variable = nums)
-nums_box.grid(column = 3, row = 4)
+num_box = Checkbutton(frame2, text = "Numbers", variable = nums)
+num_box.grid(column = 3, row = 4)
 
-syms= IntVar()
-syms_box = Checkbutton(frame2, text = "Symbols", variable = syms)
-syms_box.grid(column = 4, row = 4)
+sym_box = Checkbutton(frame2, text = "Symbols", variable = syms)
+sym_box.grid(column = 4, row = 4)
 
 #Buttons
 
