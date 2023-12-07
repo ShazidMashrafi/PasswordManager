@@ -3,20 +3,20 @@ from tkinter import messagebox
 import random
 import string
 
-#Screen
+# Screen
 
 screen = Tk()
-screen.config(padx = 50 , pady = 50)
+screen.config(padx=50, pady=50)
 
 
-#Global Variables
+# Global Variables
 
 uppers = IntVar()
 nums = IntVar()
 syms = IntVar()
 
 
-#----------------------------------------------------Password Generator ----------------------------------------------------------#
+# ----------------------------------------------------Password Generator ----------------------------------------------------------#
 
 def generate():
 
@@ -30,8 +30,9 @@ def generate():
     len = int(length_entry.get())
 
     if len < 8:
-        messagebox.showerror(title = "Password too short", message = "Password must be at least 8 characters.")
-    
+        messagebox.showerror(title="Password too short",
+                             message="Password must be at least 8 characters.")
+
     else:
         n_uppercase = int(len * .15) if uppers.get() else 0
         n_numbers = int(len * .30) if nums.get() else 0
@@ -49,21 +50,20 @@ def generate():
 
         for char in password_list:
             password += char
-    
+
         password_entry.insert(END, password)
         password_entry.clipboard_clear()
         password_entry.clipboard_append(password)
 
 
-
-#--------------------------------------------------------Save Password ----------------------------------------------------------#
+# --------------------------------------------------------Save Password ----------------------------------------------------------#
 
 def special_character(s):
 
     for c in s:
         if not (c.isalpha() or c.isdigit() or c == '_' or c == '.' or c == '@' or c == '-'):
             return True
-        
+
     return False
 
 
@@ -74,99 +74,117 @@ def save():
     password = password_entry.get()
 
     if len(website) == 0 or len(password) == 0 or len(email) == 0:
-        messagebox.showerror(title = "Invalid Input", message = "Don't leave any field empty!")
-    
+        messagebox.showerror(title="Invalid Input",
+                             message="Don't leave any field empty!")
+
     elif special_character(email):
-        messagebox.showerror(title = "Invalid username!", message = "No special characters are allowed in username.")
-    
+        messagebox.showerror(title="Invalid username!",
+                             message="No special characters are allowed in username.")
+
     else:
-        is_ok = messagebox.askokcancel(title = website, message = f"You have entered: \nEmail: {email}\nPassword: {password}\n"
-                                                            f"Are you sure to save?")
+        is_ok = messagebox.askokcancel(title=website, message=f"You have entered: \nEmail: {email}\nPassword: {password}\n"
+                                       f"Are you sure to save?")
         if is_ok:
-            with open("Passwords.txt", "a") as f:
-                f.write(f"{website} | {email} | {password}\n")
+            with open("Passwords.txt", "r") as f:
+                data = [line.strip().split(' | ') for line in f.readlines()]
 
-            website_entry.delete(0, END)
-            email_entry.delete(0, END)
-            password_entry.delete(0, END)
+        # Update the password if the website and email matches
+        for i in range(len(data)):
+            if data[i][0] == "Website : " + website and data[i][1] == "Username/Email : " + email:
+                messagebox.askokcancel(title=website, message=f"{email} for {website} already exists!\n"
+                                       f"Do you want to update the password?")
+                data[i][2] = "Password : " + password
+                break
+        else:
+            # If no match was found, add a new entry
+            data.append(["Website : " + website,
+                        "Username/Email : " + email, "Password : " + password])
+
+        # Write the updated data back to the file
+        with open("Passwords.txt", "w") as f:
+            for entry in data:
+                f.write(f"{entry[0]} | {entry[1]} | {entry[2]}\n")
+
+        website_entry.delete(0, END)
+        email_entry.delete(0, END)
+        password_entry.delete(0, END)
+        
+
+# --------------------------------------------------- UI Setup ------------------------------------------------------------------#
 
 
-
-#--------------------------------------------------- UI Setup ------------------------------------------------------------------#
-
-logo = PhotoImage(file = "Assets//logo.png")
+logo = PhotoImage(file="Assets//logo.png")
 screen.iconphoto(False, logo)
 screen.title("Password Manager")
 
-canvas = Canvas(width = 480, height = 320)
+canvas = Canvas(width=480, height=320)
 
-photo = PhotoImage(file = "Assets//banner.png")
-banner = Label(screen, image = photo)
-banner.place(x = 60, y = -30)
+photo = PhotoImage(file="Assets//banner.png")
+banner = Label(screen, image=photo)
+banner.place(x=60, y=-30)
 
-canvas.grid(column = 1, row = 0)
+canvas.grid(column=1, row=0)
 
 
-#Label
+# Label
 
-website = Label(text = "Website : ")
-website.grid(column = 0, row = 1)
+website = Label(text="Website : ")
+website.grid(column=0, row=1)
 
-email = Label(text = "Email or Username : ")
-email.grid(column = 0, row = 2)
+email = Label(text="Email or Username : ")
+email.grid(column=0, row=2)
 
-password = Label(text = "Password : ")
-password.grid(column = 0, row = 3)
+password = Label(text="Password : ")
+password.grid(column=0, row=3)
 
 # gen = Label(text = "Generate : ")
 # gen.grid(column = 0, row = 4)
 
 
-#Entries
+# Entries
 
-website_entry = Entry(width = 50)
-website_entry.grid(column = 1, row = 1)
+website_entry = Entry(width=50)
+website_entry.grid(column=1, row=1)
 website_entry.focus()
 
-email_entry = Entry(width = 50)
-email_entry.grid(column = 1, row = 2)
+email_entry = Entry(width=50)
+email_entry.grid(column=1, row=2)
 
-password_entry = Entry(width = 50)
-password_entry.grid(column = 1, row = 3)
-
-
-#Password variables
-
-frame2 = Frame(screen, width = 400, height = 20)
-frame2.grid(column = 1, row = 4)
-
-length = Label(frame2, text = "Password length : ")
-length.grid(column = 0, row = 4)
-
-length_entry = Entry(frame2, width = 4)
-length_entry.grid(column = 1, row = 4)
-
-include = Label(frame2, text = "Include : ")
-include.grid(column = 2, row = 4, padx = (20, 2))
-
-upper_box = Checkbutton(frame2, text = "Uppercase", variable = uppers)
-upper_box.grid(column = 3, row = 4)
-
-num_box = Checkbutton(frame2, text = "Numbers", variable = nums)
-num_box.grid(column = 4, row = 4)
-
-sym_box = Checkbutton(frame2, text = "Symbols", variable = syms)
-sym_box.grid(column = 5, row = 4)
+password_entry = Entry(width=50)
+password_entry.grid(column=1, row=3)
 
 
-#Buttons
+# Password variables
 
-generate_button = Button(text = "Generate Password", command = generate)
-generate_button.grid(column = 1, row = 5, columnspan = 2, pady = (5, 10))
+frame2 = Frame(screen, width=400, height=20)
+frame2.grid(column=1, row=4)
 
-add_button = Button(text = "Save", width = 20, command = save)
-add_button.grid(column = 1, row = 6, columnspan = 3)
+length = Label(frame2, text="Password length : ")
+length.grid(column=0, row=4)
 
+length_entry = Entry(frame2, width=4)
+length_entry.grid(column=1, row=4)
+
+include = Label(frame2, text="Include : ")
+include.grid(column=2, row=4, padx=(20, 2))
+
+upper_box = Checkbutton(frame2, text="Uppercase", variable=uppers)
+upper_box.grid(column=3, row=4)
+
+num_box = Checkbutton(frame2, text="Numbers", variable=nums)
+num_box.grid(column=4, row=4)
+
+sym_box = Checkbutton(frame2, text="Symbols", variable=syms)
+sym_box.grid(column=5, row=4)
+
+
+# Buttons
+
+generate_button = Button(text="Generate Password", command=generate)
+generate_button.grid(column=1, row=5, columnspan=2, pady=(5, 10))
+
+add_button = Button(text="Save", width=20, command=save)
+add_button.grid(column=1, row=6, columnspan=3)
 
 
 screen.mainloop()
