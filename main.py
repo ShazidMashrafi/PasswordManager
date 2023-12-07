@@ -1,16 +1,13 @@
 from tkinter import *
 from tkinter import messagebox
 import random
-import string
 
-# Screen
-
+# Main screen of GUI
 screen = Tk()
-screen.config(padx=50, pady=50)
+screen.config(padx = 50, pady = 50)
 
 
 # Global Variables
-
 uppers = IntVar()
 nums = IntVar()
 syms = IntVar()
@@ -18,55 +15,96 @@ syms = IntVar()
 
 # ----------------------------------------------------Password Generator ----------------------------------------------------------#
 
+# Function to generate password.
 def generate():
 
+    # Delete the previous password entry.
     password_entry.delete(0, END)
 
-    uppercase = list(string.ascii_uppercase)
-    lowercase = list(string.ascii_lowercase)
-    numbers = list(string.digits)
+    # All uppercase letters in a list.
+    uppercase = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 
+                    'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    
+    # All lowercase letters in a list.
+    lowercase = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 
+                    'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+    
+    # All digits in a list.
+    numbers = ['0', '1', '2', '3','4', '5', '6', '7', '8', '9']
+
+    # Allowed symbols in a list.
     symbols = ['@', '#', '$', '%', '&', '_', '!', '.', '?', '*']
 
+    # Get the desired length of password from length entry box.
     len = int(length_entry.get())
 
+    # If entered length is less the 8, pop up an error box saying that password must be at least 8 characters.
     if len < 8:
         messagebox.showerror(title="Password too short",
                              message="Password must be at least 8 characters.")
 
+    # If entered length is 8 characters or more then
     else:
+
+        #if "uppercase" is selected allocate 15% of the total length to uppercase letters, else 0.
         n_uppercase = int(len * .15) if uppers.get() else 0
+
+        #if "numbers" is selected allocate 30% of the total length to numbers, else 0.
         n_numbers = int(len * .30) if nums.get() else 0
+
+        #if "symbols" is selected allocate 15% of the total length to symbols, else 0.
         n_symbols = int(len * .15) if syms.get() else 0
+
+        # Allocate the remaining length to lowercase letters.
         n_lowercase = len - (n_uppercase + n_numbers + n_symbols)
 
-        password_list = [random.choice(lowercase) for _ in range(n_lowercase)]
-        password_list += [random.choice(uppercase) for _ in range(n_uppercase)]
-        password_list += [random.choice(symbols) for _ in range(n_symbols)]
-        password_list += [random.choice(numbers) for _ in range(n_numbers)]
+        # An empty list to store all the characters of password.
+        password_list = []
 
+        # Generate lowercase characters.
+        for _ in range(n_lowercase):
+            password_list.append(random.choice(lowercase))
+
+        # Generate uppercase characters.
+        for _ in range(n_uppercase):
+            password_list.append(random.choice(uppercase))
+
+        # Generate symbols.
+        for _ in range(n_symbols):
+            password_list.append(random.choice(symbols))
+
+        # Generate numbers.
+        for _ in range(n_numbers):
+            password_list.append(random.choice(numbers))
+
+        # Shuffle the password list to make it random.
         random.shuffle(password_list)
 
+        # An empty string for the final generated password.
         password = ""
 
+        # store the characters from password list to password string.
         for char in password_list:
             password += char
-
+        
+        # Show the generated password in the password box.
         password_entry.insert(END, password)
-        password_entry.clipboard_clear()
-        password_entry.clipboard_append(password)
 
 
 # --------------------------------------------------------Save Password ----------------------------------------------------------#
 
+# A function to check if there are any special characters in the username or email.
 def special_character(s):
 
     for c in s:
         if not (c.isalpha() or c.isdigit() or c == '_' or c == '.' or c == '@' or c == '-'):
+            # If there are no special character then the username or email can be used.
             return True
 
+    # If there are any special characters, then the username or email can't be used. 
     return False
 
-
+# Function to save the entries in a txt file.
 def save():
 
     website = website_entry.get()
@@ -105,86 +143,108 @@ def save():
             for entry in data:
                 f.write(f"{entry[0]} | {entry[1]} | {entry[2]}\n")
 
+        # Delete the entries after saving.
         website_entry.delete(0, END)
         email_entry.delete(0, END)
         password_entry.delete(0, END)
+        length_entry.delete(0,END)
         
 
-# --------------------------------------------------- UI Setup ------------------------------------------------------------------#
+# -------------------------------------------------------- GUI ------------------------------------------------------------------#
 
-
-logo = PhotoImage(file="Assets//logo.png")
+# Selecting a png file for the logo of the GUI.
+logo = PhotoImage(file = "Assets//logo.png")
 screen.iconphoto(False, logo)
+
+# Giving a title to our GUI.
 screen.title("Password Manager")
 
-canvas = Canvas(width=480, height=320)
+# Dimension of our GUI window.
+canvas = Canvas(width = 480, height = 320)
 
-photo = PhotoImage(file="Assets//banner.png")
-banner = Label(screen, image=photo)
-banner.place(x=60, y=-30)
+# Selecting an png file for the main image in our GUI.
+photo = PhotoImage(file = "Assets//banner.png")
+banner = Label(screen, image = photo)
+banner.place(x = 60, y = -30)
 
-canvas.grid(column=1, row=0)
-
-
-# Label
-
-website = Label(text="Website : ")
-website.grid(column=0, row=1)
-
-email = Label(text="Email or Username : ")
-email.grid(column=0, row=2)
-
-password = Label(text="Password : ")
-password.grid(column=0, row=3)
-
-# gen = Label(text = "Generate : ")
-# gen.grid(column = 0, row = 4)
+# Placing the image on row 0 and column 1
+canvas.grid(row = 0, column = 1)
 
 
-# Entries
+# Labels for out entry boxes inside GUI
 
-website_entry = Entry(width=50)
-website_entry.grid(column=1, row=1)
+# Label of "website" entry box on row 1 and column 0.   
+website = Label(text = "Website name: ")
+website.grid(row = 1, column = 0)
+
+# Label of "email/username" entry box on row 2 and column 0.
+email = Label(text = "Email address or Username : ")
+email.grid(row = 2, column = 0)
+
+#Label of "Password" entry box on row 3 and column 0.
+password = Label(text = "Password : ")
+password.grid(row = 3, column = 0)
+
+
+# Entry Boxes
+
+# "website entry box" of width 75 on row 1 and column 1.
+website_entry = Entry(width = 75)
+website_entry.grid(row = 1,column = 1)
 website_entry.focus()
 
-email_entry = Entry(width=50)
-email_entry.grid(column=1, row=2)
+# "email entry box" of width 75 on row 2 and column 1.
+email_entry = Entry(width = 75)
+email_entry.grid(row = 2, column = 1)
 
-password_entry = Entry(width=50)
-password_entry.grid(column=1, row=3)
+# "password entry box" of width 75 on row 1 and column 1.
+password_entry = Entry(width = 75)
+password_entry.grid(row = 3, column = 1)
 
 
 # Password variables
 
-frame2 = Frame(screen, width=400, height=20)
-frame2.grid(column=1, row=4)
+# Marking a frame for the variables to be in, placing the frame on row 4 and column 1 of the canvas.
+frame = Frame(screen, width = 400, height = 20)
+frame.grid(row = 4, column = 1)
 
-length = Label(frame2, text="Password length : ")
-length.grid(column=0, row=4)
+# Label of "length entry" box on row 4 and column 0 of the frame.
+length = Label(frame, text = "Password length : ")
+length.grid(row = 4, column = 0)
 
-length_entry = Entry(frame2, width=4)
-length_entry.grid(column=1, row=4)
+# "length"  entry box of width 5 on row 4 and column 1 of the frame.
+length_entry = Entry(frame, width = 5)
+length_entry.grid(row = 4, column = 1)
 
-include = Label(frame2, text="Include : ")
-include.grid(column=2, row=4, padx=(20, 2))
+# "Include" text, placing on row 4 and column 2 with padding on left and right.
+include = Label(frame, text = "Include : ")
+include.grid(row = 4, column = 2, padx = (20, 2))
 
-upper_box = Checkbutton(frame2, text="Uppercase", variable=uppers)
-upper_box.grid(column=3, row=4)
+# "Uppercase" check button on row 4 and column 3. This will be the value of "uppers" variable.
+upper_box = Checkbutton(frame, text = "Uppercase", variable = uppers)
+upper_box.grid(row = 4, column = 3)
 
-num_box = Checkbutton(frame2, text="Numbers", variable=nums)
-num_box.grid(column=4, row=4)
+# "Numbers" check button on row 4 and column 4. This will be the value of "nums" variable.
+num_box = Checkbutton(frame, text = "Numbers", variable = nums)
+num_box.grid(row = 4, column = 4)
 
-sym_box = Checkbutton(frame2, text="Symbols", variable=syms)
-sym_box.grid(column=5, row=4)
+# "Symbols" check button on row 4 and column 5. This will be the value of "syms" variable.
+sym_box = Checkbutton(frame, text = "Symbols", variable = syms)
+sym_box.grid(row = 4, column = 5)
 
 
 # Buttons
 
-generate_button = Button(text="Generate Password", command=generate)
-generate_button.grid(column=1, row=5, columnspan=2, pady=(5, 10))
+# "Password generate" button on row 5 and column 1 with columnspan of 2 and horizontal padding. 
+# This button will call "generate" function.
+generate_button = Button(text = "Generate Password", command = generate)
+generate_button.grid(row = 5, column = 1, columnspan = 2, pady = (5, 10))
 
-add_button = Button(text="Save", width=20, command=save)
-add_button.grid(column=1, row=6, columnspan=3)
+# "Save" button on row 6 column 1 with a columnspan of 3. This will call "save" function.
+add_button = Button(text = "Save", width = 20, command = save)
+add_button.grid(row = 6, column = 1, columnspan = 3)
 
 
 screen.mainloop()
+
+# End of the program
