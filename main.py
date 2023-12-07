@@ -107,41 +107,80 @@ def special_character(s):
 # Function to save the entries in a txt file.
 def save():
 
+    # Get the entries from GUI and save them in variables
     website = website_entry.get()
     email = email_entry.get()
     password = password_entry.get()
 
+    # Check if any field in GUI is empty, if yes then pop up an error message.
     if len(website) == 0 or len(password) == 0 or len(email) == 0:
         messagebox.showerror(title="Invalid Input",
                              message="Don't leave any field empty!")
 
+    # Check if there are any special characters in username/email.
     elif special_character(email):
         messagebox.showerror(title="Invalid username!",
                              message="No special characters are allowed in username.")
 
     else:
+
+        # Confirmation dialog to save the password or not.
         is_ok = messagebox.askokcancel(title=website, message=f"You have entered: \nEmail: {email}\nPassword: {password}\n"
                                        f"Are you sure to save?")
+        
+        # If user chooses to save
         if is_ok:
+
+            # Declare an empty list
+            data = []
+
+            # Open the txt file as read mode
             with open("Passwords.txt", "r") as f:
-                data = [line.strip().split(' | ') for line in f.readlines()]
 
-        # Update the password if the website and email matches
-        for i in range(len(data)):
-            if data[i][0] == "Website : " + website and data[i][1] == "Username/Email : " + email:
-                messagebox.askokcancel(title=website, message=f"{email} for {website} already exists!\n"
-                                       f"Do you want to update the password?")
-                data[i][2] = "Password : " + password
-                break
-        else:
-            # If no match was found, add a new entry
-            data.append(["Website : " + website,
-                        "Username/Email : " + email, "Password : " + password])
+                # Iterate through lines and split every line by "|" and append to "data".
+                for lines in f.readlines():
+                    stripped_line = lines.strip()
+                    split_line = stripped_line.split(' | ')
+                    data.append(split_line)
+            
+            # If "data" is not empty 
+            if data:
+                # Declaring a variable as false initially
+                found = False
 
-        # Write the updated data back to the file
-        with open("Passwords.txt", "w") as f:
-            for entry in data:
-                f.write(f"{entry[0]} | {entry[1]} | {entry[2]}\n")
+                # Iterate through every elements in "data"
+                for i in range(len(data)):
+                    
+                    # If the new entry matches an existing one ask the user to update the password or not
+                    if data[i][0] == "Website : " + website and data[i][1] == "Username/Email : " + email:
+                        is_yes = messagebox.askyesno(title=website, message=f'"{email}" for "{website}" already exists!\n'
+                                       f'Do you want to update the password?')
+                        
+                        # If match is found set the value of "found" to true
+                        found = True
+                        
+                        # If user wants to update then replace the old password with the new one
+                        if is_yes:
+                            data[i][2] = "Password : " + password
+                            break
+
+                        # If the user doesn't want to update then consider it as a new entry
+                        else:
+                            data.append(["Website : " + website, "Username/Email : " + email, "Password : " + password])
+                            break
+                
+                # If no match is found add the new entry
+                if not found:
+                    data.append(["Website : " + website, "Username/Email : " + email, "Password : " + password])
+            
+            # If data is empty, add the new entry to "data" list
+            else:
+                data.append(["Website : " + website, "Username/Email : " + email, "Password : " + password])
+            
+            # Save all the elements of "data" in the txt file
+            with open("Passwords.txt", "w") as f:
+                for entry in data:
+                    f.write(f"{entry[0]} | {entry[1]} | {entry[2]}\n")
 
         # Delete the entries after saving.
         website_entry.delete(0, END)
@@ -202,9 +241,9 @@ password_entry = Entry(width = 75)
 password_entry.grid(row = 3, column = 1)
 
 
-# Password variables
+# Password options
 
-# Marking a frame for the variables to be in, placing the frame on row 4 and column 1 of the canvas.
+# Marking a frame for the options to be in, placing the frame on row 4 and column 1 of the canvas.
 frame = Frame(screen, width = 400, height = 20)
 frame.grid(row = 4, column = 1)
 
