@@ -97,13 +97,13 @@ def save():
                 break
         else:
             # If no match was found, add a new entry
-            data.append(["Website : " + website,"Username/Email : " + email, "Password : " + password])
+            data.append(["Website : " + website,
+                        "Username/Email : " + email, "Password : " + password])
 
         # Write the updated data back to the file
         with open("Passwords.txt", "w") as f:
             for entry in data:
                 f.write(f"{entry[0]} | {entry[1]} | {entry[2]}\n")
-
 
         website_entry.delete(0, END)
         email_entry.delete(0, END)
