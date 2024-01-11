@@ -36,59 +36,64 @@ def generate():
     symbols = ['@', '#', '$', '%', '&', '_', '!', '.', '?', '*']
 
     # Get the desired length of password from length entry box.
-    len = int(length_entry.get())
+    len_str= length_entry.get()
 
+    if len_str == '':
+        messagebox.showerror(title="Password length undefined",
+                             message="Please enter the length of password.")
     # If entered length is less the 8, pop up an error box saying that password must be at least 8 characters.
-    if len < 8:
-        messagebox.showerror(title="Password too short",
+    else:
+        len = int(len_str)
+        if len < 8:
+            messagebox.showerror(title="Password too short",
                              message="Password must be at least 8 characters.")
 
-    # If entered length is 8 characters or more then
-    else:
+        # If entered length is 8 characters or more then
+        else:
 
-        #if "uppercase" is selected allocate 15% of the total length to uppercase letters, else 0.
-        n_uppercase = int(len * .15) if uppers.get() else 0
+            #if "uppercase" is selected allocate 15% of the total length to uppercase letters, else 0.
+            n_uppercase = int(len * .15) if uppers.get() else 0
 
-        #if "numbers" is selected allocate 30% of the total length to numbers, else 0.
-        n_numbers = int(len * .30) if nums.get() else 0
+            #if "numbers" is selected allocate 30% of the total length to numbers, else 0.
+            n_numbers = int(len * .30) if nums.get() else 0
 
-        #if "symbols" is selected allocate 15% of the total length to symbols, else 0.
-        n_symbols = int(len * .15) if syms.get() else 0
+            #if "symbols" is selected allocate 15% of the total length to symbols, else 0.
+            n_symbols = int(len * .15) if syms.get() else 0
 
-        # Allocate the remaining length to lowercase letters.
-        n_lowercase = len - (n_uppercase + n_numbers + n_symbols)
+            # Allocate the remaining length to lowercase letters.
+            n_lowercase = len - (n_uppercase + n_numbers + n_symbols)
 
-        # An empty list to store all the characters of password.
-        password_list = []
+            # An empty list to store all the characters of password.
+            password_list = []
 
-        # Generate lowercase characters.
-        for _ in range(n_lowercase):
-            password_list.append(random.choice(lowercase))
+            # Generate lowercase characters.
+            for _ in range(n_lowercase):
+                password_list.append(random.choice(lowercase))
 
-        # Generate uppercase characters.
-        for _ in range(n_uppercase):
-            password_list.append(random.choice(uppercase))
+            # Generate uppercase characters.
+            for _ in range(n_uppercase):
+                password_list.append(random.choice(uppercase))
 
-        # Generate symbols.
-        for _ in range(n_symbols):
-            password_list.append(random.choice(symbols))
+            # Generate symbols.
+            for _ in range(n_symbols):
+                password_list.append(random.choice(symbols))
 
-        # Generate numbers.
-        for _ in range(n_numbers):
-            password_list.append(random.choice(numbers))
+            # Generate numbers.
+            for _ in range(n_numbers):
+                password_list.append(random.choice(numbers))
 
-        # Shuffle the password list to make it random.
-        random.shuffle(password_list)
+            # Shuffle the password list to make it random.
+            random.shuffle(password_list)
 
-        # An empty string for the final generated password.
-        password = ""
+            # An empty string for the final generated password.
+            password = ""
 
-        # store the characters from password list to password string.
-        for char in password_list:
-            password += char
-        
-        # Show the generated password in the password box.
-        password_entry.insert(END, password)
+            # store the characters from password list to password string.
+            for char in password_list:
+                password += char
+            
+            # Show the generated password in the password box.
+            password_entry.insert(END, password)
 
 
 # --------------------------------------------------------Save Password ----------------------------------------------------------#
