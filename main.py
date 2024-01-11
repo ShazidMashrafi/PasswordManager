@@ -8,9 +8,9 @@ screen.config(padx = 50, pady = 50)
 
 
 # Global Variables
-uppers = IntVar()
-nums = IntVar()
-syms = IntVar()
+upper = IntVar()
+digit = IntVar()
+sym = IntVar()
 
 
 # ----------------------------------------------------Password Generator ----------------------------------------------------------#
@@ -22,65 +22,66 @@ def generate():
     password_entry.delete(0, END)
 
     # All uppercase letters in a list.
-    uppercase = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 
+    uppers = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 
                     'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
     
     # All lowercase letters in a list.
-    lowercase = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 
+    lowers = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 
                     'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     
     # All digits in a list.
-    numbers = ['0', '1', '2', '3','4', '5', '6', '7', '8', '9']
+    digits = ['0', '1', '2', '3','4', '5', '6', '7', '8', '9']
 
     # Allowed symbols in a list.
-    symbols = ['@', '#', '$', '%', '&', '_', '!', '.', '?', '*']
+    syms = ['@', '#', '$', '%', '&', '_', '!', '.', '?', '*']
 
     # Get the desired length of password from length entry box.
-    len_str= length_entry.get()
+    len_str = length_entry.get()
 
+    # If length box is empty show an error saying to input length of password
     if len_str == '':
-        messagebox.showerror(title="Password length undefined",
-                             message="Please enter the length of password.")
+        messagebox.showerror(title = "Password length undefined",
+                             message = "Please enter the length of password.")
     # If entered length is less the 8, pop up an error box saying that password must be at least 8 characters.
     else:
         len = int(len_str)
         if len < 8:
-            messagebox.showerror(title="Password too short",
-                             message="Password must be at least 8 characters.")
+            messagebox.showerror(title = "Password too short",
+                             message = "Password must be at least 8 characters.")
 
         # If entered length is 8 characters or more then
         else:
 
             #if "uppercase" is selected allocate 15% of the total length to uppercase letters, else 0.
-            n_uppercase = int(len * .15) if uppers.get() else 0
+            n_upper = int(len * .15) if upper.get() else 0
 
             #if "numbers" is selected allocate 30% of the total length to numbers, else 0.
-            n_numbers = int(len * .30) if nums.get() else 0
+            n_digit = int(len * .30) if digit.get() else 0
 
             #if "symbols" is selected allocate 15% of the total length to symbols, else 0.
-            n_symbols = int(len * .15) if syms.get() else 0
+            n_sym = int(len * .15) if sym.get() else 0
 
             # Allocate the remaining length to lowercase letters.
-            n_lowercase = len - (n_uppercase + n_numbers + n_symbols)
+            n_lower = len - (n_upper + n_digit + n_sym)
 
             # An empty list to store all the characters of password.
             password_list = []
 
             # Generate lowercase characters.
-            for _ in range(n_lowercase):
-                password_list.append(random.choice(lowercase))
+            for _ in range(n_lower):
+                password_list.append(random.choice(lowers))
 
             # Generate uppercase characters.
-            for _ in range(n_uppercase):
-                password_list.append(random.choice(uppercase))
+            for _ in range(n_upper):
+                password_list.append(random.choice(uppers))
 
             # Generate symbols.
-            for _ in range(n_symbols):
-                password_list.append(random.choice(symbols))
+            for _ in range(n_sym):
+                password_list.append(random.choice(syms))
 
             # Generate numbers.
-            for _ in range(n_numbers):
-                password_list.append(random.choice(numbers))
+            for _ in range(n_digit):
+                password_list.append(random.choice(digits))
 
             # Shuffle the password list to make it random.
             random.shuffle(password_list)
@@ -119,18 +120,18 @@ def save():
 
     # Check if any field in GUI is empty, if yes then pop up an error message.
     if len(website) == 0 or len(password) == 0 or len(email) == 0:
-        messagebox.showerror(title="Invalid Input",
-                             message="Don't leave any field empty!")
+        messagebox.showerror(title = "Invalid Input",
+                             message = "Don't leave any field empty!")
 
     # Check if there are any special characters in username/email.
     elif special_character(email):
-        messagebox.showerror(title="Invalid username!",
-                             message="No special characters are allowed in username.")
+        messagebox.showerror(title = "Invalid username!",
+                             message = "No special characters are allowed in username.")
 
     else:
 
         # Confirmation dialog to save the password or not.
-        is_ok = messagebox.askokcancel(title=website, message=f"You have entered: \nEmail: {email}\nPassword: {password}\n"
+        is_ok = messagebox.askokcancel(title = website, message = f"You have entered: \nEmail: {email}\nPassword: {password}\n"
                                        f"Are you sure to save?")
         
         # If user chooses to save
@@ -158,7 +159,7 @@ def save():
                     
                     # If the new entry matches an existing one ask the user to update the password or not
                     if data[i][0] == "Website : " + website and data[i][1] == "Username/Email : " + email:
-                        is_yes = messagebox.askyesno(title=website, message=f'"{email}" for "{website}" already exists!\n'
+                        is_yes = messagebox.askyesno(title = website, message = f'"{email}" for "{website}" already exists!\n'
                                        f'Do you want to update the password?')
                         
                         # If match is found set the value of "found" to true
@@ -234,7 +235,7 @@ password.grid(row = 3, column = 0)
 
 # "website entry box" of width 75 on row 1 and column 1.
 website_entry = Entry(width = 75)
-website_entry.grid(row = 1,column = 1)
+website_entry.grid(row = 1, column = 1)
 website_entry.focus()
 
 # "email entry box" of width 75 on row 2 and column 1.
@@ -264,16 +265,16 @@ length_entry.grid(row = 4, column = 1)
 include = Label(frame, text = "Include : ")
 include.grid(row = 4, column = 2, padx = (20, 2))
 
-# "Uppercase" check button on row 4 and column 3. This will be the value of "uppers" variable.
-upper_box = Checkbutton(frame, text = "Uppercase", variable = uppers)
+# "Uppercase" check button on row 4 and column 3. This will be the value of "upper" variable.
+upper_box = Checkbutton(frame, text = "Uppercase", variable = upper)
 upper_box.grid(row = 4, column = 3)
 
-# "Numbers" check button on row 4 and column 4. This will be the value of "nums" variable.
-num_box = Checkbutton(frame, text = "Numbers", variable = nums)
+# "Numbers" check button on row 4 and column 4. This will be the value of "digit" variable.
+num_box = Checkbutton(frame, text = "Digit", variable = digit)
 num_box.grid(row = 4, column = 4)
 
-# "Symbols" check button on row 4 and column 5. This will be the value of "syms" variable.
-sym_box = Checkbutton(frame, text = "Symbols", variable = syms)
+# "Symbols" check button on row 4 and column 5. This will be the value of "sym" variable.
+sym_box = Checkbutton(frame, text = "Symbol", variable = sym)
 sym_box.grid(row = 4, column = 5)
 
 
