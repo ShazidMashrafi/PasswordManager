@@ -180,63 +180,59 @@ def save():
         
         # If user chooses to save
         if is_ok:
+            # Declaring a variable as false initially
+            found = False
 
             # Declare an empty list
-            data = []
+            accounts = []
 
             # Open the txt file as read mode
             with open("Passwords.txt", "r") as file:
                 lines = file.readlines()
-                # Iterate through lines and split every line by "|" and append to "data".
             
+            # Iterate through lines and split every line by " | " and append to "accounts".
             for line in lines:
-                split_line = line.split(' | ')
-                data.append(split_line)
+                stripped_line = line.strip()
+                split_line = stripped_line.split(' | ')
+                accounts.append(split_line)
 
-            # If "data" is not empty 
-            if data:
-                # Declaring a variable as false initially
-                found = False
+            # Iterate through every elements in "accounts"
+            for account in accounts:
 
-                # Iterate through every elements in "data"
-                for i in range(len(data)):
+                # If the new entry matches an existing one ask the user to update the password or not
+                if account[0] == "Website : " + website and account[1] == "Email/Username : " + email:
+                    # If match is found set the value of "found" to true
+                    found = True
+
+                    is_yes = messagebox.askyesno(title = "Existing account", 
+                                                message = f"Entry for:\n\n"
+                                                          f"Website : {website}\n"
+                                                          f"Email/Username : {email}\n\n"
+                                                          f"Already exists! Do you want to update the password?\n"
+                                                          f"Not updating password will create a new entry.")
                     
-                    # If the new entry matches an existing one ask the user to update the password or not
-                    if data[i][0] == "Website : " + website and data[i][1] == "Email/Username : " + email:
-                        is_yes = messagebox.askyesno(title = "Existing account", 
-                                                     message = f"Entry for:\n\n"
-                                                               f"Website : {website}\n"
-                                                               f"Email/Username : {email}\n\n"
-                                                               f"Already exists! Do you want to update the password?\n"
-                                                               f"Not updating password will create a new entry.")
-                        
-                        # If match is found set the value of "found" to true
-                        found = True
-                        
-                        # If user wants to update then replace the old password with the new one
-                        if is_yes:
-                            data[i][2] = "Password : " + password
-                            break
+                    
+                    # If user wants to update then replace the old password with the new one
+                    if is_yes:
+                        account[2] = "Password : " + password
 
-                        # If the user doesn't want to update then consider it as a new entry
-                        else:
-                            data.append(["Website : " + website, "Email/Username : " + email, "Password : " + password])
-                            break
-                
-                # If no match is found add the new entry
-                if not found:
-                    data.append(["Website : " + website, "Email/Username : " + email, "Password : " + password])
-            
-            # If data is empty, add the new entry to "data" list
-            else:
-                data.append(["Website : " + website, "Email/Username : " + email, "Password : " + password])
+                    # If the user doesn't want to update then consider it as a new entry
+                    else:
+                        accounts.append(["Website : " + website, "Email/Username : " + email, "Password : " + password])
+                    
+                    break
+
+            # If no match is found add the new entry
+            if not found:
+                accounts.append(["Website : " + website, "Email/Username : " + email, "Password : " + password])
+        
             
             # Save all the elements of "data" in the txt file
             with open("Passwords.txt", "w") as file:
-                for entry in data:
-                    file.write(f"{entry[0]} | {entry[1]} | {entry[2]}")
+                for account in accounts:
+                    file.write(f"{account[0]} | {account[1]} | {account[2]}\n")
 
-            # Password saving successful dialog box         
+            # Password saving successful dialog box
             messagebox.showinfo(title = "Success", 
                                 message = "Password has been saved successfully")
         
