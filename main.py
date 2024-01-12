@@ -189,7 +189,10 @@ def save():
             with open("Passwords.txt", "w") as f:
                 for entry in data:
                     f.write(f"{entry[0]} | {entry[1]} | {entry[2]}\n")
-
+           
+            # Password saving successful dialog box         
+            messagebox.showinfo("Success", "Password was saved successfully")
+        
         # Delete the entries after saving.
         website_entry.delete(0, END)
         email_entry.delete(0, END)
