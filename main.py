@@ -188,10 +188,11 @@ def save():
             with open("Passwords.txt", "r") as file:
                 lines = file.readlines()
                 # Iterate through lines and split every line by "|" and append to "data".
-                for line in lines:
-                    split_line = line.split(' | ')
-                    data.append(split_line)
             
+            for line in lines:
+                split_line = line.split(' | ')
+                data.append(split_line)
+
             # If "data" is not empty 
             if data:
                 # Declaring a variable as false initially
@@ -233,8 +234,8 @@ def save():
             # Save all the elements of "data" in the txt file
             with open("Passwords.txt", "w") as file:
                 for entry in data:
-                    file.write(f"{entry[0]} | {entry[1]} | {entry[2]}\n")
-           
+                    file.write(f"{entry[0]} | {entry[1]} | {entry[2]}")
+
             # Password saving successful dialog box         
             messagebox.showinfo(title = "Success", 
                                 message = "Password has been saved successfully")
