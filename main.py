@@ -24,6 +24,7 @@ def not_digit(s):
     # Return false if all the characters in length are digits    
     return False
 
+
 # Function to generate password.
 def generate():
 
@@ -137,6 +138,7 @@ def special_character(s):
 
     # If there are any special characters, then the username or email can't be used. 
     return False
+
 
 # Function to save the entries in a txt file.
 def save():
