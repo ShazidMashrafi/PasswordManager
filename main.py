@@ -140,11 +140,12 @@ def save():
     else:
 
         # Confirmation dialog to save the password or not.
-        is_ok = messagebox.askokcancel(title = "Confirm save", message = f"You have entered:\n\n"
-                                                                         f"Website: {website}\n"
-                                                                         f"Email/Username: {email}\n"
-                                                                         f"Password: {password}\n\n"
-                                                                         f"Are you sure to save?")
+        is_ok = messagebox.askokcancel(title = "Confirm save", 
+                                       message = f"You have entered:\n\n"
+                                                 f"Website: {website}\n"
+                                                 f"Email/Username: {email}\n"
+                                                 f"Password: {password}\n\n"
+                                                 f"Are you sure to save?")
         
         # If user chooses to save
         if is_ok:
@@ -154,11 +155,10 @@ def save():
 
             # Open the txt file as read mode
             with open("Passwords.txt", "r") as file:
-
+                lines = file.readlines()
                 # Iterate through lines and split every line by "|" and append to "data".
-                for lines in file.readlines():
-                    stripped_line = lines.strip()
-                    split_line = stripped_line.split(' | ')
+                for line in lines:
+                    split_line = line.split(' | ')
                     data.append(split_line)
             
             # If "data" is not empty 
@@ -171,11 +171,12 @@ def save():
                     
                     # If the new entry matches an existing one ask the user to update the password or not
                     if data[i][0] == "Website : " + website and data[i][1] == "Email/Username : " + email:
-                        is_yes = messagebox.askyesno(title = "Existing account", message = f"Entry for:\n\n"
-                                                                                           f"Website : {website}\n"
-                                                                                           f"Email/Username : {email}\n\n"
-                                                                                           f"Already exists! Do you want to update the password?\n"
-                                                                                           f"Not updating password will create a new entry.")
+                        is_yes = messagebox.askyesno(title = "Existing account", 
+                                                     message = f"Entry for:\n\n"
+                                                               f"Website : {website}\n"
+                                                               f"Email/Username : {email}\n\n"
+                                                               f"Already exists! Do you want to update the password?\n"
+                                                               f"Not updating password will create a new entry.")
                         
                         # If match is found set the value of "found" to true
                         found = True
@@ -204,7 +205,8 @@ def save():
                     file.write(f"{entry[0]} | {entry[1]} | {entry[2]}\n")
            
             # Password saving successful dialog box         
-            messagebox.showinfo("Success", "Password has been saved successfully")
+            messagebox.showinfo(title = "Success", 
+                                message = "Password has been saved successfully")
         
             # Delete the entries after saving.
             website_entry.delete(0, END)
