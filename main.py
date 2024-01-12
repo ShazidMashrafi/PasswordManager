@@ -204,7 +204,7 @@ def save():
                     file.write(f"{entry[0]} | {entry[1]} | {entry[2]}\n")
            
             # Password saving successful dialog box         
-            messagebox.showinfo("Success", "Password was saved successfully")
+            messagebox.showinfo("Success", "Password has been saved successfully")
         
             # Delete the entries after saving.
             website_entry.delete(0, END)
