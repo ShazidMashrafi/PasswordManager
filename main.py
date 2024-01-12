@@ -121,12 +121,15 @@ def save():
     if len(website) == 0 or len(password) == 0 or len(email) == 0:
         messagebox.showerror(title = "Invalid Input",
                              message = "Don't leave any field empty!")
-
     # Check if there are any special characters in username/email.
     elif special_character(email):
         messagebox.showerror(title = "Invalid username!",
                              message = "No special characters are allowed in username.")
-
+    
+    # If password length is lower than 8, show error saying to enter a longer password
+    elif len(password) < 8:
+        messagebox.showerror(title = "Password too short",
+                             message = "Password must be at least 8 characters.")
     else:
 
         # Confirmation dialog to save the password or not.
