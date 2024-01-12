@@ -14,6 +14,16 @@ sym = IntVar()
 
 # ----------------------------------------------------Password Generator ----------------------------------------------------------#
 
+# Function to check if entered password length is digit or not
+def not_digit(s):
+    for c in s:
+        # If it is not a digit return true
+        if not c.isdigit():
+            return True
+
+    # Return false if all the characters in length are digits    
+    return False
+
 # Function to generate password.
 def generate():
 
@@ -41,13 +51,26 @@ def generate():
     if len_str == '':
         messagebox.showerror(title = "Password length undefined",
                              message = "Please enter the length of password.")
+        
+    # Check if entered length is a number or not
+    elif (not_digit(len_str)):
+        messagebox.showerror(title = "Invalid length",
+                             message = "Password length must be a number.")
+        
     # If entered length is less the 8, pop up an error box saying that password must be at least 8 characters.
     else:
         len = int(len_str)
+
+        # If password length is lower than 8 characters, show an error saying password too short
         if len < 8:
             messagebox.showerror(title = "Password too short",
                                  message = "Password must be at least 8 characters.")
-
+            
+        # If password length is higher than 32 characters, show an error saying password too long    
+        elif len > 32 :
+            messagebox.showerror(title = "Password too long",
+                                 message = "Password must be at most 32 characters.")
+            
         # If entered length is 8 characters or more then
         else:
             n_upper = 0
@@ -137,6 +160,12 @@ def save():
     elif len(password) < 8:
         messagebox.showerror(title = "Password too short",
                              message = "Password must be at least 8 characters.")
+        
+    # If password length is higher than 32 characters, show an error saying password too long    
+    elif len(password) > 32 :
+        messagebox.showerror(title = "Password too long",
+                                message = "Password must be at most 32 characters.")
+        
     else:
 
         # Confirmation dialog to save the password or not.
