@@ -46,19 +46,25 @@ def generate():
         len = int(len_str)
         if len < 8:
             messagebox.showerror(title = "Password too short",
-                             message = "Password must be at least 8 characters.")
+                                 message = "Password must be at least 8 characters.")
 
         # If entered length is 8 characters or more then
         else:
+            n_upper = 0
+            n_digit = 0
+            n_sym = 0
 
             #if "uppercase" is selected allocate 15% of the total length to uppercase letters, else 0.
-            n_upper = int(len * .15) if upper.get() else 0
+            if upper.get():
+                n_upper = int(len * .15)
 
             #if "numbers" is selected allocate 30% of the total length to numbers, else 0.
-            n_digit = int(len * .30) if digit.get() else 0
+            if digit.get():
+                n_digit = int(len * .30) 
 
             #if "symbols" is selected allocate 15% of the total length to symbols, else 0.
-            n_sym = int(len * .15) if sym.get() else 0
+            if sym.get():
+                n_sym = int(len * .15) 
 
             # Allocate the remaining length to lowercase letters.
             n_lower = len - (n_upper + n_digit + n_sym)
@@ -121,9 +127,10 @@ def save():
     if len(website) == 0 or len(password) == 0 or len(email) == 0:
         messagebox.showerror(title = "Invalid Input",
                              message = "Don't leave any field empty!")
+        
     # Check if there are any special characters in username/email.
     elif special_character(email):
-        messagebox.showerror(title = "Invalid username!",
+        messagebox.showerror(title = "Invalid Email/Username!",
                              message = "No special characters are allowed in username.")
     
     # If password length is lower than 8, show error saying to enter a longer password
@@ -133,8 +140,11 @@ def save():
     else:
 
         # Confirmation dialog to save the password or not.
-        is_ok = messagebox.askokcancel(title = website, message = f"You have entered: \nEmail: {email}\nPassword: {password}\n"
-                                       f"Are you sure to save?")
+        is_ok = messagebox.askokcancel(title = "Confirm save", message = f"You have entered:\n\n"
+                                                                         f"Website: {website}\n"
+                                                                         f"Email/Username: {email}\n"
+                                                                         f"Password: {password}\n\n"
+                                                                         f"Are you sure to save?")
         
         # If user chooses to save
         if is_ok:
@@ -143,10 +153,10 @@ def save():
             data = []
 
             # Open the txt file as read mode
-            with open("Passwords.txt", "r") as f:
+            with open("Passwords.txt", "r") as file:
 
                 # Iterate through lines and split every line by "|" and append to "data".
-                for lines in f.readlines():
+                for lines in file.readlines():
                     stripped_line = lines.strip()
                     split_line = stripped_line.split(' | ')
                     data.append(split_line)
@@ -160,9 +170,12 @@ def save():
                 for i in range(len(data)):
                     
                     # If the new entry matches an existing one ask the user to update the password or not
-                    if data[i][0] == "Website : " + website and data[i][1] == "Username/Email : " + email:
-                        is_yes = messagebox.askyesno(title = website, message = f'"{email}" for "{website}" already exists!\n'
-                                       f'Do you want to update the password?')
+                    if data[i][0] == "Website : " + website and data[i][1] == "Email/Username : " + email:
+                        is_yes = messagebox.askyesno(title = "Existing account", message = f"Entry for:\n\n"
+                                                                                           f"Website : {website}\n"
+                                                                                           f"Email/Username : {email}\n\n"
+                                                                                           f"Already exists! Do you want to update the password?\n"
+                                                                                           f"Not updating password will create a new entry.")
                         
                         # If match is found set the value of "found" to true
                         found = True
@@ -174,30 +187,30 @@ def save():
 
                         # If the user doesn't want to update then consider it as a new entry
                         else:
-                            data.append(["Website : " + website, "Username/Email : " + email, "Password : " + password])
+                            data.append(["Website : " + website, "Email/Username : " + email, "Password : " + password])
                             break
                 
                 # If no match is found add the new entry
                 if not found:
-                    data.append(["Website : " + website, "Username/Email : " + email, "Password : " + password])
+                    data.append(["Website : " + website, "Email/Username : " + email, "Password : " + password])
             
             # If data is empty, add the new entry to "data" list
             else:
-                data.append(["Website : " + website, "Username/Email : " + email, "Password : " + password])
+                data.append(["Website : " + website, "Email/Username : " + email, "Password : " + password])
             
             # Save all the elements of "data" in the txt file
-            with open("Passwords.txt", "w") as f:
+            with open("Passwords.txt", "w") as file:
                 for entry in data:
-                    f.write(f"{entry[0]} | {entry[1]} | {entry[2]}\n")
+                    file.write(f"{entry[0]} | {entry[1]} | {entry[2]}\n")
            
             # Password saving successful dialog box         
             messagebox.showinfo("Success", "Password was saved successfully")
         
-        # Delete the entries after saving.
-        website_entry.delete(0, END)
-        email_entry.delete(0, END)
-        password_entry.delete(0, END)
-        length_entry.delete(0,END)
+            # Delete the entries after saving.
+            website_entry.delete(0, END)
+            email_entry.delete(0, END)
+            password_entry.delete(0, END)
+            length_entry.delete(0,END)
         
 
 # -------------------------------------------------------- GUI ------------------------------------------------------------------#
@@ -246,7 +259,7 @@ website = Label(text = "Website name: ")
 website.grid(row = 1, column = 0)
 
 # Label of "email/username" entry box on row 2 and column 0.
-email = Label(text = "Email address or Username : ")
+email = Label(text = "Email/Username : ")
 email.grid(row = 2, column = 0)
 
 #Label of "Password" entry box on row 3 and column 0.
