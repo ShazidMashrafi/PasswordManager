@@ -2,9 +2,8 @@ from tkinter import *
 from tkinter import messagebox
 import random
 
-# Main screen of GUI
-screen = Tk()
-screen.config(padx = 50, pady = 50)
+# Creating the main window of our program
+root = Tk()
 
 
 # Global Variables
@@ -99,7 +98,7 @@ def generate():
 
 # --------------------------------------------------------Save Password ----------------------------------------------------------#
 
-# A function to check if there are any special characters in the username or email.
+# Function to check if there are any special characters in the username or email.
 def special_character(s):
 
     for c in s:
@@ -197,26 +196,44 @@ def save():
 
 # -------------------------------------------------------- GUI ------------------------------------------------------------------#
 
+# ------------ Window ----------- #
+        
+# Make the window size fixed
+root.resizable(False, False)
+
+# Get screen width and height
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+
+# Initial size of the main window
+window_width = 800
+window_height = 600
+
+# Calculate center position of the screen
+position_top = int(screen_height / 2 - window_height / 2)
+position_right = int(screen_width / 2 - window_width / 2)
+
+# Set the size and position of the window
+root.geometry(f"{window_width}x{window_height}+{position_right}+{position_top}")
+
+# Create padding on all sides of the window
+root.config(padx = 50, pady = 50)
+
 # Selecting a png file for the logo of the GUI.
 logo = PhotoImage(file = "Assets//logo.png")
-screen.iconphoto(False, logo)
+root.iconphoto(True, logo)
 
 # Giving a title to our GUI.
-screen.title("Password Manager")
+root.title("Password Manager")
 
-# Dimension of our GUI window.
-canvas = Canvas(width = 480, height = 320)
-
-# Selecting an png file for the main image in our GUI.
+# Selecting an image for our main window
 photo = PhotoImage(file = "Assets//banner.png")
-banner = Label(screen, image = photo)
-banner.place(x = 60, y = -30)
-
-# Placing the image on row 0 and column 1
-canvas.grid(row = 0, column = 1)
+banner = Label(root, image = photo)
+banner.grid(row = 0, column = 0,columnspan = 5, padx = (100, 0))
 
 
-# Labels for out entry boxes inside GUI
+
+# --------- Labels ------------ #
 
 # Label of "website" entry box on row 1 and column 0.   
 website = Label(text = "Website name: ")
@@ -231,7 +248,7 @@ password = Label(text = "Password : ")
 password.grid(row = 3, column = 0)
 
 
-# Entry Boxes
+# ----------- Entry Boxes --------- #
 
 # "website entry box" of width 75 on row 1 and column 1.
 website_entry = Entry(width = 75)
@@ -247,10 +264,10 @@ password_entry = Entry(width = 75)
 password_entry.grid(row = 3, column = 1)
 
 
-# Password options
+# ----------- Password options ---------- #
 
 # Marking a frame for the options to be in, placing the frame on row 4 and column 1 of the canvas.
-frame = Frame(screen, width = 400, height = 20)
+frame = Frame(root, width = 400, height = 20)
 frame.grid(row = 4, column = 1)
 
 # Label of "length entry" box on row 4 and column 0 of the frame.
@@ -278,7 +295,7 @@ sym_box = Checkbutton(frame, text = "Symbol", variable = sym)
 sym_box.grid(row = 4, column = 5)
 
 
-# Buttons
+# ------------ Buttons -------------- #
 
 # "Password generate" button on row 5 and column 1 with columnspan of 2 and horizontal padding. 
 # This button will call "generate" function.
@@ -290,6 +307,6 @@ add_button = Button(text = "Save", width = 20, command = save)
 add_button.grid(row = 6, column = 1, columnspan = 3)
 
 
-screen.mainloop()
+root.mainloop()
 
 # End of the program
