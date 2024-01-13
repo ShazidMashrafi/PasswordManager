@@ -234,7 +234,7 @@ def save():
 
             # Password saving successful dialog box
             messagebox.showinfo(title = "Success", 
-                                message = "Password has been saved successfully")
+                                message = "Account has been saved successfully")
         
             # Delete the entries after saving.
             website_entry.delete(0, END)
