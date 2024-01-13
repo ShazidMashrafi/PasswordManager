@@ -205,10 +205,11 @@ def save():
                     found = True
 
                     is_yes = messagebox.askyesno(title = "Existing account", 
-                                                message = f"Entry for:\n\n"
+                                                message = f"Account for:\n\n"
                                                           f"Website : {website}\n"
                                                           f"Email/Username : {email}\n\n"
-                                                          f"Already exists! Do you want to update the password?\n"
+                                                          f"Already exists!\n" 
+                                                          f"Do you want to update the password?\n"
                                                           f"Not updating password will create a new entry.")
                     
                     
